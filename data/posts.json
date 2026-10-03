@@ -8,6 +8,14 @@
       "mediaUrl": null,
       "imagePath": null,
       "date": "2026-10-03T11:00:00.000Z"
+    },
+    {
+      "id": "1791029522384-07cdd213",
+      "type": "media",
+      "text": "algo",
+      "mediaUrl": "./imagenes/1791029513647-17deda4f-WhatsApp-Image-2026-10-03-at-11-43-10.jpeg",
+      "imagePath": "imagenes/1791029513647-17deda4f-WhatsApp-Image-2026-10-03-at-11-43-10.jpeg",
+      "date": "2026-10-03T12:12:02.384Z"
     }
   ]
 }

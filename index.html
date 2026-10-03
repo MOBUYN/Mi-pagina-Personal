@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Web Personal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 500: '#8b5cf6', 600: '#7c3aed' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased font-sans selection:bg-brand-500 selection:text-white">
+
+    <main class="max-w-3xl mx-auto px-4 py-12 relative">
+        
+        <!-- Sección de Perfil -->
+        <section class="glass-panel rounded-3xl p-8 mb-8 text-center shadow-2xl">
+            <div class="relative inline-block mb-4">
+                <img src="https://placehold.co/150x150/4f46e5/ffffff?text=FOTO" alt="Foto de perfil" class="w-32 h-32 rounded-full object-cover border-4 border-brand-500 shadow-lg mx-auto">
+                <div class="absolute bottom-1 right-1 bg-green-400 w-6 h-6 rounded-full border-4 border-slate-900" title="Online"></div>
+            </div>
+            <h1 class="text-4xl font-bold mb-2 tracking-tight" id="profile-name">Brais Tembra Lestido</h1>
+            <p class="text-slate-300 mb-6 text-lg" id="profile-bio">Creador de contenido, desarrollador y entusiasta de la tecnología. Bienvenido a mi espacio personal.</p>
+            
+            <!-- Redes Sociales -->
+            <div class="flex justify-center gap-4 flex-wrap">
+                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:bg-brand-500 hover:scale-110 transition-all duration-300 text-white"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:bg-blue-400 hover:scale-110 transition-all duration-300 text-white"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:bg-blue-600 hover:scale-110 transition-all duration-300 text-white"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:bg-gray-800 hover:scale-110 transition-all duration-300 text-white"><i class="fab fa-github"></i></a>
+                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-xl hover:bg-red-500 hover:scale-110 transition-all duration-300 text-white"><i class="fab fa-youtube"></i></a>
+            </div>
+        </section>
+
+        <!-- Muro de Contenido (Feed) -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i class="fas fa-stream text-brand-500"></i> Últimas Novedades
+            </h2>
+            <div id="feed-container" class="space-y-6">
+                <!-- Los posts se generarán aquí con JavaScript -->
+                <div class="text-center text-slate-400 py-10 glass-panel rounded-2xl">
+                    <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
+                    <p>Cargando contenido...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Botón para abrir el Portal (Oculto discretamente) -->
+        <button onclick="togglePortal()" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-slate-800/50 hover:bg-brand-600 text-slate-400 hover:text-white backdrop-blur transition-all flex items-center justify-center shadow-lg border border-slate-700 z-40" title="Acceso a Portal">
+            <i class="fas fa-lock"></i>
+        </button>
+    </main>
+
+    <!-- Modal del Portal (Admin) -->
+    <div id="admin-portal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex flex-col items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-8 w-full max-w-md shadow-2xl relative border-brand-500/30 border-2">
+            
+            <button onclick="togglePortal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <i class="fas fa-cloud-upload-alt text-4xl text-brand-500 mb-2"></i>
+                <h3 class="text-2xl font-bold">Portal de Subida</h3>
+                <p class="text-sm text-slate-400 mt-1">Sube contenido a tu repositorio</p>
+            </div>
+
+            <!-- Paso 1: "Autenticación" Simulada -->
+            <div id="login-step" class="block">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Contraseña del Portal / GitHub Token</label>
+                    <input type="password" id="admin-password" class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Introduce tu clave segura">
+                </div>
+                <button onclick="verifyLogin()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                    Desbloquear Portal
+                </button>
+                <p class="text-xs text-slate-500 mt-4 text-center">
+                    En una implementación real de GitHub Pages, aquí insertarías tu Personal Access Token.
+                </p>
+            </div>
+
+            <!-- Paso 2: Formulario de subida -->
+            <div id="upload-step" class="hidden">
+                <form id="upload-form" onsubmit="handleUpload(event)">
+                    
+                    <!-- Tipo de contenido -->
+                    <div class="mb-4 flex gap-2">
+                        <button type="button" onclick="setPostType('text')" id="btn-type-text" class="flex-1 py-2 rounded-lg bg-brand-600 text-white transition-colors border border-brand-500"><i class="fas fa-align-left mr-2"></i>Anuncio</button>
+                        <button type="button" onclick="setPostType('media')" id="btn-type-media" class="flex-1 py-2 rounded-lg bg-slate-800 text-slate-300 transition-colors border border-slate-700 hover:bg-slate-700"><i class="fas fa-image mr-2"></i>Foto/Video</button>
+                    </div>
+                    <input type="hidden" id="post-type" value="text">
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-1">Mensaje o Descripción</label>
+                        <textarea id="post-text" rows="3" class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 transition-all resize-none" placeholder="¿Qué quieres compartir?" required></textarea>
+                    </div>
+
+                    <div id="media-input-group" class="mb-6 hidden">
+                        <label class="block text-sm font-medium mb-1">Archivo (Imagen/Video)</label>
+                        <input type="file" id="post-file" accept="image/*,video/mp4" class="block w-full text-sm text-slate-400
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-brand-500 file:text-white
+                            hover:file:bg-brand-600 transition-all cursor-pointer">
+                        <p class="text-xs text-slate-400 mt-2">Máx 5MB recomendado para GitHub API.</p>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Publicar y Guardar
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // ESTADO DE LA APLICACIÓN (Simulación de base de datos / repositorio)
+        let posts = [];
+        const DEMO_PASSWORD = "123"; // Contraseña de prueba para el entorno
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+        });
+
+        // 1. CARGA DE DATOS
+        function loadPosts() {
+            // Intentamos cargar de localStorage primero (nuestro "repositorio" simulado para esta demo)
+            const savedData = localStorage.getItem('myWebPosts');
+            if (savedData) {
+                posts = JSON.parse(savedData);
+            } else {
+                // Datos iniciales de ejemplo si está vacío
+                posts = [
+                    {
+                        id: Date.now(),
+                        type: 'text',
+                        text: '¡Hola a todos! Acabo de lanzar mi nueva página web alojada en GitHub Pages. ¡Bienvenidos! 🚀',
+                        mediaBase64: null,
+                        date: new Date().toISOString()
+                    }
+                ];
+                saveToLocalStorage();
+            }
+            renderPosts();
+        }
+
+        // 2. RENDERIZADO DEL MURO
+        function renderPosts() {
+            const container = document.getElementById('feed-container');
+            container.innerHTML = ''; // Limpiar
+
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-10 glass-panel rounded-2xl">
+                        <p>No hay publicaciones aún.</p>
+                    </div>`;
+                return;
+            }
+
+            // Ordenar de más nuevo a más viejo
+            const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedPosts.forEach(post => {
+                const dateObj = new Date(post.date);
+                const formattedDate = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+                const formattedTime = dateObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+                let mediaHtml = '';
+                if (post.type === 'media' && post.mediaBase64) {
+                    if (post.mediaBase64.startsWith('data:video')) {
+                         mediaHtml = `<video controls class="w-full rounded-xl mt-4 border border-slate-700"><source src="${post.mediaBase64}"></video>`;
+                    } else {
+                         mediaHtml = `<img src="${post.mediaBase64}" alt="Post media" class="w-full rounded-xl mt-4 border border-slate-700 object-cover max-h-96">`;
+                    }
+                }
+
+                const postElement = document.createElement('div');
+                postElement.className = 'glass-panel rounded-2xl p-6 fade-in';
+                postElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold">
+                                ${document.getElementById('profile-name').innerText.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white leading-tight">${document.getElementById('profile-name').innerText}</h4>
+                                <span class="text-xs text-slate-400">${formattedDate} a las ${formattedTime}</span>
+                            </div>
+                        </div>
+                        <button onclick="deletePost(${post.id})" class="text-slate-500 hover:text-red-400 transition-colors" title="Eliminar (Solo demo)">
+                            <i class="fas fa-trash-alt text-sm"></i>
+                        </button>
+                    </div>
+                    <p class="text-slate-200 whitespace-pre-wrap">${post.text}</p>
+                    ${mediaHtml}
+                `;
+                container.appendChild(postElement);
+            });
+        }
+
+        // 3. LÓGICA DEL PORTAL (UI)
+        function togglePortal() {
+            const portal = document.getElementById('admin-portal');
+            portal.classList.toggle('hidden');
+        }
+
+        function verifyLogin() {
+            const passInput = document.getElementById('admin-password').value;
+            // En una app real, aquí se evaluaría el Token o la contraseña real.
+            if (passInput === DEMO_PASSWORD) {
+                document.getElementById('login-step').classList.add('hidden');
+                document.getElementById('upload-step').classList.remove('hidden');
+                document.getElementById('admin-password').value = '';
+            } else {
+                alert("Contraseña incorrecta. Pista: usa '123' para esta demo.");
+            }
+        }
+
+        function setPostType(type) {
+            document.getElementById('post-type').value = type;
+            const btnText = document.getElementById('btn-type-text');
+            const btnMedia = document.getElementById('btn-type-media');
+            const mediaGroup = document.getElementById('media-input-group');
+
+            if (type === 'text') {
+                btnText.className = 'flex-1 py-2 rounded-lg bg-brand-600 text-white transition-colors border border-brand-500';
+                btnMedia.className = 'flex-1 py-2 rounded-lg bg-slate-800 text-slate-300 transition-colors border border-slate-700 hover:bg-slate-700';
+                mediaGroup.classList.add('hidden');
+                document.getElementById('post-file').removeAttribute('required');
+            } else {
+                btnMedia.className = 'flex-1 py-2 rounded-lg bg-brand-600 text-white transition-colors border border-brand-500';
+                btnText.className = 'flex-1 py-2 rounded-lg bg-slate-800 text-slate-300 transition-colors border border-slate-700 hover:bg-slate-700';
+                mediaGroup.classList.remove('hidden');
+                document.getElementById('post-file').setAttribute('required', 'true');
+            }
+        }
+
+        // 4. LÓGICA DE SUBIDA
+        async function handleUpload(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Subiendo...';
+            btn.disabled = true;
+
+            const type = document.getElementById('post-type').value;
+            const text = document.getElementById('post-text').value;
+            const fileInput = document.getElementById('post-file');
+            
+            let mediaBase64 = null;
+
+            try {
+                if (type === 'media' && fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    mediaBase64 = await convertFileToBase64(file);
+                }
+
+                const newPost = {
+                    id: Date.now(),
+                    type: type,
+                    text: text,
+                    mediaBase64: mediaBase64,
+                    date: new Date().toISOString()
+                };
+
+                // Guardar localmente para la demostración
+                posts.push(newPost);
+                saveToLocalStorage();
+                
+                // NOTA TÉCNICA PARA EL USUARIO:
+                // Aquí es donde harías la llamada a la API de GitHub en una app real.
+                // Ejemplo comentado:
+                /*
+                  const githubToken = "TU_TOKEN_SECRETO"; // NUNCA EXPONER ESTO AL PÚBLICO
+                  const contentBase64 = btoa(JSON.stringify(posts)); 
+                  await fetch('https://api.github.com/repos/tu-usuario/tu-repo/contents/data/posts.json', {
+                      method: 'PUT',
+                      headers: {
+                          'Authorization': `token ${githubToken}`,
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          message: "Subiendo nuevo post desde el portal",
+                          content: contentBase64,
+                          sha: "SHA_DEL_ARCHIVO_ANTERIOR" // Requerido para actualizar archivos en GitHub API
+                      })
+                  });
+                */
+
+                // Limpiar formulario y cerrar
+                document.getElementById('upload-form').reset();
+                setPostType('text'); // volver por defecto
+                togglePortal();
+                
+                // Recargar el muro
+                renderPosts();
+                
+                // Notificación visual rápida (en una app real usar un Toast, pero esto es rápido)
+                setTimeout(() => alert("¡Publicado con éxito! (Guardado en memoria de prueba)"), 100);
+
+            } catch (error) {
+                console.error("Error subiendo el archivo:", error);
+                alert("Hubo un error procesando el archivo.");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Publicar y Guardar';
+                btn.disabled = false;
+            }
+        }
+
+        // Funciones auxiliares
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function saveToLocalStorage() {
+            // Guardamos todo el array de posts (simulando un archivo posts.json del repositorio)
+            localStorage.setItem('myWebPosts', JSON.stringify(posts));
+        }
+
+        function deletePost(id) {
+            if(confirm("¿Seguro que deseas eliminar esta publicación?")) {
+                posts = posts.filter(p => p.id !== id);
+                saveToLocalStorage();
+                renderPosts();
+                // En una implementación con GitHub API, aquí harías un PUT para actualizar el archivo JSON borrando el post.
+            }
+        }
+    </script>
+</body>
+</html>

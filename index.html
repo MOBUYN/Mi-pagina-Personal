@@ -97,123 +97,100 @@
 
     <!-- Modal Admin -->
     <div id="admin-portal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex flex-col items-center justify-center p-4">
-        <div class="glass-panel rounded-3xl p-8 w-full max-w-lg shadow-2xl relative border-brand-500/30 border-2 max-h-[90vh] overflow-y-auto">
+    <div class="glass-panel rounded-3xl p-8 w-full max-w-lg shadow-2xl relative border-brand-500/30 border-2 max-h-[90vh] overflow-y-auto">
 
-            <button onclick="togglePortal()" class="absolute top-4 right-4 text-slate-400 hover:text-white" aria-label="Cerrar">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+        <button onclick="togglePortal()" class="absolute top-4 right-4 text-slate-400 hover:text-white" aria-label="Cerrar">
+            <i class="fas fa-times text-xl"></i>
+        </button>
 
-            <div class="text-center mb-6">
-                <i class="fas fa-cloud-upload-alt text-4xl text-brand-500 mb-2"></i>
-                <h3 class="text-2xl font-bold">Portal de publicación</h3>
-                <p class="text-sm text-slate-400 mt-1">Las publicaciones e imágenes se guardarán en GitHub</p>
-            </div>
+        <div class="text-center mb-6">
+            <i class="fas fa-cloud-upload-alt text-4xl text-brand-500 mb-2"></i>
+            <h3 class="text-2xl font-bold">Portal de publicación</h3>
+            <p class="text-sm text-slate-400 mt-1">Publica anuncios y fotos directamente en GitHub</p>
+        </div>
 
-            <!-- Paso 1: conexión -->
-            <div id="login-step">
-                <div class="rounded-xl border border-slate-700 bg-slate-900/40 p-4 mb-5">
-                    <p class="text-sm text-slate-300">
-                        Usa un <strong>Fine-grained Personal Access Token</strong> de GitHub con acceso
-                        <strong>Contents: Read and write</strong> únicamente al repositorio de tu web.
-                        El token no se guarda en localStorage ni en el código.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Usuario / propietario</label>
-                        <input id="github-owner" autocomplete="username"
-                               class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500"
-                               placeholder="tu-usuario">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Repositorio</label>
-                        <input id="github-repo" autocomplete="off"
-                               class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500"
-                               placeholder="mi-web">
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-1">Rama</label>
-                    <input id="github-branch" autocomplete="off"
-                           class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500"
-                           placeholder="main" value="main">
-                </div>
-
-                <div class="mb-5">
-                    <label class="block text-sm font-medium mb-1">Fine-grained token de GitHub</label>
-                    <input type="password" id="github-token" autocomplete="off"
-                           class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500"
-                           placeholder="github_pat_..." spellcheck="false">
-                </div>
-
-                <button onclick="connectGitHub()" id="connect-btn"
-                        class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
-                    <i class="fab fa-github mr-2"></i> Conectar con GitHub
-                </button>
-
-                <p class="text-xs text-slate-500 mt-4 text-center">
-                    El token vive solo en memoria mientras esta pestaña esté abierta.
+        <!-- Acceso: un solo campo. Acepta token de GitHub o la contraseña configurada abajo. -->
+        <div id="login-step">
+            <div class="rounded-xl border border-slate-700 bg-slate-900/40 p-4 mb-5">
+                <p class="text-sm text-slate-300">
+                    Introduce tu <strong>token de GitHub</strong> o la <strong>contraseña del portal</strong>.
                 </p>
             </div>
 
-            <!-- Paso 2: publicación -->
-            <div id="upload-step" class="hidden">
-                <div class="flex items-center justify-between gap-3 rounded-xl bg-slate-900/40 border border-slate-700 px-4 py-3 mb-5">
-                    <div>
-                        <div class="text-sm font-semibold text-white" id="connection-label">GitHub conectado</div>
-                        <div class="text-xs text-slate-400" id="repo-label"></div>
-                    </div>
-                    <button type="button" onclick="disconnectGitHub()"
-                            class="text-xs text-slate-400 hover:text-red-400 border border-slate-700 rounded-lg px-3 py-2">
-                        Desconectar
+            <div class="mb-5">
+                <label class="block text-sm font-medium mb-1">Clave de acceso</label>
+                <input type="password" id="admin-password" autocomplete="off" spellcheck="false"
+                       onkeydown="if(event.key === 'Enter') verifyLogin()"
+                       class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
+                       placeholder="Token de GitHub o contraseña">
+            </div>
+
+            <button onclick="verifyLogin()" id="verify-login-btn"
+                    class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                <i class="fas fa-lock-open mr-2"></i>Entrar al portal
+            </button>
+
+            <p class="text-xs text-slate-500 mt-4 text-center">
+                La configuración del repositorio está integrada en el index.
+            </p>
+        </div>
+
+        <!-- Panel de publicación -->
+        <div id="upload-step" class="hidden">
+            <div class="flex items-center justify-between gap-3 rounded-xl bg-slate-900/40 border border-slate-700 px-4 py-3 mb-5">
+                <div>
+                    <div class="text-sm font-semibold text-white"><i class="fab fa-github mr-1"></i>GitHub conectado</div>
+                    <div class="text-xs text-slate-400" id="repo-label">MOBUYN/Mi-pagina-Personal · main</div>
+                </div>
+                <button type="button" onclick="disconnectGitHub()"
+                        class="text-xs text-slate-400 hover:text-red-400 border border-slate-700 rounded-lg px-3 py-2">
+                    Desconectar
+                </button>
+            </div>
+
+            <form id="upload-form" onsubmit="handleUpload(event)">
+                <div class="mb-4 flex gap-2">
+                    <button type="button" onclick="setPostType('text')" id="btn-type-text"
+                            class="flex-1 py-2 rounded-lg bg-brand-600 text-white transition-colors border border-brand-500">
+                        <i class="fas fa-align-left mr-2"></i>Anuncio
+                    </button>
+                    <button type="button" onclick="setPostType('media')" id="btn-type-media"
+                            class="flex-1 py-2 rounded-lg bg-slate-800 text-slate-300 transition-colors border border-slate-700 hover:bg-slate-700">
+                        <i class="fas fa-image mr-2"></i>Foto
                     </button>
                 </div>
 
-                <form id="upload-form" onsubmit="handleUpload(event)">
-                    <div class="mb-4 flex gap-2">
-                        <button type="button" onclick="setPostType('text')" id="btn-type-text"
-                                class="flex-1 py-2 rounded-lg bg-brand-600 text-white transition-colors border border-brand-500">
-                            <i class="fas fa-align-left mr-2"></i>Anuncio
-                        </button>
-                        <button type="button" onclick="setPostType('media')" id="btn-type-media"
-                                class="flex-1 py-2 rounded-lg bg-slate-800 text-slate-300 transition-colors border border-slate-700 hover:bg-slate-700">
-                            <i class="fas fa-image mr-2"></i>Foto
-                        </button>
-                    </div>
+                <input type="hidden" id="post-type" value="text">
 
-                    <input type="hidden" id="post-type" value="text">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Mensaje o descripción</label>
+                    <textarea id="post-text" rows="4"
+                              class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 transition-all resize-none"
+                              placeholder="¿Qué quieres compartir?" required></textarea>
+                </div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Mensaje o descripción</label>
-                        <textarea id="post-text" rows="4"
-                                  class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 transition-all resize-none"
-                                  placeholder="¿Qué quieres compartir?" required></textarea>
-                    </div>
+                <div id="media-input-group" class="mb-6 hidden">
+                    <label class="block text-sm font-medium mb-1">Imagen</label>
+                    <input type="file" id="post-file" accept="image/jpeg,image/png,image/gif,image/webp,image/avif"
+                           class="block w-full text-sm text-slate-400
+                           file:mr-4 file:py-2 file:px-4
+                           file:rounded-full file:border-0
+                           file:text-sm file:font-semibold
+                           file:bg-brand-500 file:text-white
+                           hover:file:bg-brand-600 transition-all cursor-pointer">
+                    <p class="text-xs text-slate-400 mt-2">Máximo recomendado: 20 MB por imagen.</p>
+                </div>
 
-                    <div id="media-input-group" class="mb-6 hidden">
-                        <label class="block text-sm font-medium mb-1">Imagen</label>
-                        <input type="file" id="post-file" accept="image/jpeg,image/png,image/gif,image/webp,image/avif"
-                               class="block w-full text-sm text-slate-400
-                               file:mr-4 file:py-2 file:px-4
-                               file:rounded-full file:border-0
-                               file:text-sm file:font-semibold
-                               file:bg-brand-500 file:text-white
-                               hover:file:bg-brand-600 transition-all cursor-pointer">
-                        <p class="text-xs text-slate-400 mt-2">Máximo recomendado: 20 MB por imagen.</p>
-                    </div>
-
-                    <button type="submit" id="submit-btn"
-                            class="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
-                        <i class="fas fa-paper-plane mr-2"></i> Publicar
-                    </button>
-                </form>
-            </div>
+                <button type="submit" id="submit-btn"
+                        class="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <i class="fas fa-paper-plane mr-2"></i>Publicar
+                </button>
+            </form>
         </div>
     </div>
+</div>
 
-    <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] hidden max-w-md w-[calc(100%-2rem)]">
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] hidden max-w-md w-[calc(100%-2rem)]">
         <div id="toast-content" class="glass-panel rounded-xl px-4 py-3 shadow-2xl text-sm"></div>
     </div>
 
@@ -231,7 +208,25 @@
                 linkedin: 'https://www.linkedin.com/',
                 github: 'https://github.com/',
                 youtube: 'https://www.youtube.com/@MOBUYN'
-            }
+            },
+
+            // Datos del repositorio. El usuario no tendrá que escribirlos en el portal.
+            github: {
+                owner: 'MOBUYN',
+                repo: 'Mi-pagina-Personal',
+                branch: 'main'
+            },
+
+            // CONTRASEÑA OPCIONAL DEL PORTAL.
+            // Puedes escribir aquí la contraseña que quieras.
+            // IMPORTANTE: esta contraseña no protege el repositorio por sí sola.
+            // Para publicar hace falta un token de GitHub válido.
+            portalPassword: 'CAMBIA_AQUI_TU_CONTRASEÑA',
+
+            // OPCIONAL. Si lo rellenas, la contraseña anterior puede desbloquear
+            // el portal sin pedir el token. OJO: al estar en index.html, este token
+            // sería visible para cualquiera que inspeccione el código.
+            githubToken: ''
         };
 
         const POSTS_PATH = 'data/posts.json';
@@ -309,29 +304,18 @@
 
         function getConfig() {
             return {
-                owner: document.getElementById('github-owner').value.trim(),
-                repo: document.getElementById('github-repo').value.trim(),
-                branch: document.getElementById('github-branch').value.trim() || 'main'
+                owner: SITE_CONFIG.github.owner,
+                repo: SITE_CONFIG.github.repo,
+                branch: SITE_CONFIG.github.branch || 'main'
             };
         }
 
         function loadSavedConfig() {
-            let saved = null;
-            try {
-                saved = JSON.parse(localStorage.getItem('githubWebConfig') || 'null');
-            } catch (_) {}
-
-            const inferred = inferGitHubPagesConfig();
-            const config = saved || inferred;
-            if (config) {
-                document.getElementById('github-owner').value = config.owner || '';
-                document.getElementById('github-repo').value = config.repo || '';
-                document.getElementById('github-branch').value = config.branch || 'main';
-            }
+            // El repositorio queda configurado en SITE_CONFIG; no se pide al usuario.
         }
 
         function saveConfig(config) {
-            localStorage.setItem('githubWebConfig', JSON.stringify(config));
+            // No guardamos credenciales ni configuración sensible en el navegador.
         }
 
         function inferGitHubPagesConfig() {
@@ -534,38 +518,55 @@
             }
         }
 
-        async function connectGitHub() {
-            const config = getConfig();
-            githubToken = document.getElementById('github-token').value.trim();
-            const btn = document.getElementById('connect-btn');
+        async function verifyLogin() {
+            const input = document.getElementById('admin-password');
+            const btn = document.getElementById('verify-login-btn');
+            const value = input.value.trim();
 
-            if (!config.owner || !config.repo || !githubToken) {
-                showToast('Rellena usuario, repositorio y token de GitHub.', 'error');
+            if (!value) {
+                showToast('Introduce tu token de GitHub o la contraseña del portal.', 'error');
+                return;
+            }
+
+            // Si coincide con la contraseña del index, intenta usar el token
+            // configurado en window.SITE_CONFIG.githubToken (si existe).
+            const configuredToken = window.SITE_CONFIG.githubToken || '';
+            const isPassword = SITE_CONFIG.portalPassword && value === SITE_CONFIG.portalPassword;
+            githubToken = isPassword ? configuredToken : value;
+
+            if (!githubToken) {
+                showToast(
+                    'La contraseña es correcta, pero no hay un token de GitHub configurado. Por seguridad, introduce directamente el token.',
+                    'error'
+                );
+                input.value = '';
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Verificando…';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Verificando…';
 
             try {
+                const config = getConfig();
+
                 await githubFetch(
                     `/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}`
                 );
 
-                saveConfig(config);
                 document.getElementById('repo-label').textContent =
                     `${config.owner}/${config.repo} · ${config.branch}`;
+
                 document.getElementById('login-step').classList.add('hidden');
                 document.getElementById('upload-step').classList.remove('hidden');
-                document.getElementById('github-token').value = '';
+                input.value = '';
 
                 showToast('GitHub conectado correctamente.', 'success');
             } catch (error) {
                 githubToken = '';
-                showToast(`No se pudo conectar: ${error.message}`, 'error');
+                showToast(`No se pudo conectar con GitHub: ${error.message}`, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-github mr-2"></i> Conectar con GitHub';
+                btn.innerHTML = '<i class="fas fa-lock-open mr-2"></i>Entrar al portal';
             }
         }
 
@@ -573,7 +574,7 @@
             githubToken = '';
             document.getElementById('upload-step').classList.add('hidden');
             document.getElementById('login-step').classList.remove('hidden');
-            document.getElementById('github-token').value = '';
+            document.getElementById('admin-password').value = '';
             showToast('Sesión de GitHub cerrada.');
         }
 

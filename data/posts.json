@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "posts": [
+    {
+      "id": "welcome-1",
+      "type": "text",
+      "text": "¡Hola a todos! Acabo de lanzar mi nueva página web alojada en GitHub Pages. ¡Bienvenidos! 🚀",
+      "mediaUrl": null,
+      "imagePath": null,
+      "date": "2026-10-03T11:00:00.000Z"
+    }
+  ]
+}
